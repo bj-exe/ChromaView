@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Color Palette Generator</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- iro.js library -->
+  <script src="https://cdn.jsdelivr.net/npm/@jaames/iro/dist/iro.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1 id="tagline">Color Palette Generator</h1>
+
+    <div class="picker-area">
+      <div id="color-picker"></div>
+      <div class="values-area">
+        <div id="values"></div>
+
+        <h3>Shades</h3>
+        <div id="palette"></div>
+
+        <label for="colorCount"><strong>How many colors?</strong></label>
+        <input type="number" id="colorCount" min="2" max="10" value="5">
+
+        <button id="generateBtn">Generate Color Palette</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

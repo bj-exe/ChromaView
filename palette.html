@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Generated Palette</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8f6fb;
+      margin: 0;
+    }
+    .navbar {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      background: #4B2E83;
+      padding: 12px;
+    }
+    .navbar button {
+      background: #ffffff;
+      color: #4B2E83;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .navbar button:hover {
+      background: #321d5d;
+      color: #ffffff;
+    }
+    .icon-btn {
+    background: #ffffff;
+    color: #4B2E83;
+    border: none;
+    padding: 8px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    }
+    .icon-btn:hover {
+    background: #321d5d;
+    color: #ffffff;
+    }
+    .container { text-align: center; padding: 20px; }
+    h1 { font-size: 24px; margin-bottom: 10px; }
+    .palette { display: flex; gap: 10px; margin-bottom: 20px; }
+    .color-panel {
+      flex: 1;
+      min-width: 100px;
+      height: 200px;
+      border-radius: 6px;
+      position: relative;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .color-info {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      font-size: 12px;
+      color: #fff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    }
+    #blindnessPanel {
+      display: none;
+      margin-top: 20px;
+    }
+    #blindnessPanel select {
+      padding: 5px;
+      margin-right: 10px;
+    }
+    #blindnessPanel button {
+      margin: 5px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      background: #4B2E83;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    #blindnessPanel button:hover {
+      background: #321d5d;
+    }
+    h2 { margin-top: 30px; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+  <button id="blindnessBtn">Color Blindness</button>
+  <button id="copyPalette">Copy HEX Codes</button>
+  <button id="regenPalette">Generate Again</button>
+  <button class="icon-btn" onclick="window.location.href='index.html'">
+    &#x2190;
+  </button>
+
+</nav>
+
+  <div class="container">
+    <h1>Your Color Palette</h1>
+    <div id="paletteDisplay" class="palette"></div>
+
+    <div id="blindnessPanel">
+      <select id="blindnessType">
+        <option value="protanopia">Protanopia</option>
+        <option value="deuteranopia">Deuteranopia</option>
+        <option value="tritanopia">Tritanopia</option>
+        <option value="achromatopsia">Achromatopsia</option>
+      </select>
+      <button id="applyBlindness">Apply</button>
+      <button id="cancelBlindness">Cancel</button>
+    </div>
+
+    <h2>Comparison</h2>
+    <div id="comparisonDisplay" class="palette"></div>
+  </div>
+
+  <script>
+    const baseColor = localStorage.getItem("selectedColor") || "#32a84e";
+    const count = parseInt(localStorage.getItem("colorCount")) || 5;
+
+    function randomColor() {
+      return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+    }
+
+    function generatePalette(baseColor, count) {
+      const paletteDisplay = document.getElementById("paletteDisplay");
+      paletteDisplay.innerHTML = "";
+      const colors = [baseColor];
+      for (let i = 1; i < count; i++) colors.push(randomColor());
+      colors.forEach(hex => {
+        const panel = document.createElement("div");
+        panel.className = "color-panel";
+        panel.style.background = hex;
+        const info = document.createElement("div");
+        info.className = "color-info";
+        info.innerText = hex;
+        panel.appendChild(info);
+        paletteDisplay.appendChild(panel);
+      });
+    }
+
+    generatePalette(baseColor, count);
+
+    function simulateBlindness(hex, type) {
+      let r = parseInt(hex.substr(1,2),16),
+          g = parseInt(hex.substr(3,2),16),
+          b = parseInt(hex.substr(5,2),16);
+      if(type==="protanopia"){ r=0.566*r+0.433*g; g=0.558*r+0.442*g; }
+      if(type==="deuteranopia"){ r=0.625*r+0.375*g; g=0.7*r+0.3*g; }
+      if(type==="tritanopia"){ b=0.95*r+0.05*b; }
+      if(type==="achromatopsia"){ r=g=b=(r+g+b)/3; }
+      return `rgb(${Math.round(r)},${Math.round(g)},${Math.round(b)})`;
+    }
+
+    document.getElementById("blindnessBtn").addEventListener("click", () => {
+      document.getElementById("blindnessPanel").style.display = "block";
+    });
+
+    document.getElementById("applyBlindness").addEventListener("click", () => {
+      const type = document.getElementById("blindnessType").value;
+      const codes = [...document.querySelectorAll("#paletteDisplay .color-info")].map(el => el.innerText);
+      const comparison = document.getElementById("comparisonDisplay");
+      comparison.innerHTML = "";
+      codes.forEach(hex => {
+        const panel = document.createElement("div");
+        panel.className = "color-panel";
+        panel.style.background = simulateBlindness(hex,type);
+        const info = document.createElement("div");
+        info.className = "color-info";
+        info.innerText = `${hex} → ${type}`;
+        panel.appendChild(info);
+        comparison.appendChild(panel);
+      });
+    });
+
+    document.getElementById("cancelBlindness").addEventListener("click", () => {
+      document.getElementById("comparisonDisplay").innerHTML = "";
+      document.getElementById("blindnessPanel").style.display = "none";
+    });
+
+    document.getElementById("copyPalette").addEventListener("click", () => {
+      const codes = [...document.querySelectorAll("#paletteDisplay .color-info")].map(el => el.innerText);
+      navigator.clipboard.writeText(codes.join(", "));
+      alert("Copied HEX codes: " + codes.join(", "));
+    });
+
+    document.getElementById("regenPalette").addEventListener("click", () => {
+      generatePalette(baseColor, count);
+      document.getElementById("comparisonDisplay").innerHTML = "";
+    });
+
+    document.addEventListener("keydown", e => {
+      if (e.code === "Space") generatePalette(baseColor, count);
+    });
+  </script>
+</body>
+</html>
