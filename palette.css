@@ -1,0 +1,219 @@
+:root {
+  --bg: #f8f6fb;
+  --text: #231b33;
+  --muted: #5c5472;
+  --brand: #4b2e83;
+  --brand-dark: #321d5d;
+  --white: #ffffff;
+  --gap: 14px;
+   --palette-card-min: 140px;
+  --palette-card-max: 180px;
+  --comparison-card-min: 140px;
+  --comparison-card-max: 180px;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.container {
+  padding: 24px 20px 40px;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
+h2 {
+  margin-top: 30px;
+}
+
+.page-note {
+  max-width: 760px;
+  margin: 0 auto 20px;
+  color: var(--muted);
+}
+
+.navbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--gap);
+  padding: 12px;
+  background: var(--brand);
+}
+
+.navbar button,
+.icon-btn {
+  border: none;
+  border-radius: 6px;
+  background: var(--white);
+  color: var(--brand);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.navbar button {
+  padding: 8px 16px;
+}
+
+.icon-btn {
+  padding: 8px;
+  border-radius: 50%;
+  font-size: 18px;
+}
+
+.navbar button:hover,
+.icon-btn:hover,
+#blindnessPanel button:hover {
+  background: var(--brand-dark);
+  color: var(--white);
+}
+
+.palette {
+  margin: 0 auto 20px;
+}
+
+#paletteDisplay,
+#comparisonDisplay {
+  display: grid;
+  gap: var(--gap);
+  justify-content: center;
+}
+
+#paletteDisplay {
+  grid-template-columns: repeat(5, minmax(var(--palette-card-min), var(--palette-card-max)));
+  max-width: calc((5 * var(--palette-card-max)) + (4 * var(--gap)));
+}
+
+#comparisonDisplay {
+  grid-template-columns: repeat(5, minmax(var(--comparison-card-min), var(--comparison-card-max)));
+  max-width: calc((5 * var(--comparison-card-max)) + (4 * var(--gap)));
+}
+
+#paletteDisplay .color-panel,
+#comparisonDisplay > div {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+}
+
+.color-panel {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.color-panel.base-color {
+  outline: 3px solid rgba(75, 46, 131, 0.22);
+}
+
+.color-info {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  text-align: left;
+  font-size: 12px;
+  color: var(--white);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.color-role {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  opacity: 0.92;
+}
+
+.lock-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: rgba(255, 255, 255, 0.88);
+  color: #2d2250;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.lock-btn:hover {
+  transform: translateY(-1px);
+  background: var(--white);
+}
+
+.lock-btn.is-locked {
+  background: #2d2250;
+  color: var(--white);
+}
+
+.lock-btn.base-lock {
+  cursor: default;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+#blindnessPanel {
+  display: none;
+  margin-top: 20px;
+}
+
+#blindnessPanel select {
+  margin-right: 10px;
+  padding: 5px;
+}
+
+#blindnessPanel button {
+  margin: 5px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: var(--brand);
+  color: var(--white);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  #paletteDisplay,
+  #comparisonDisplay {
+    max-width: none;
+  }
+
+  #paletteDisplay {
+    grid-template-columns: repeat(2, minmax(130px, 1fr));
+  }
+
+  #comparisonDisplay {
+    grid-template-columns: repeat(2, minmax(130px, 1fr));
+  }
+}
+
+@media (min-width: 641px) and (max-width: 980px) {
+  #paletteDisplay {
+    grid-template-columns: repeat(4, minmax(var(--palette-card-min), var(--palette-card-max)));
+    max-width: calc((4 * var(--palette-card-max)) + (3 * var(--gap)));
+  }
+
+  #comparisonDisplay {
+    grid-template-columns: repeat(4, minmax(var(--comparison-card-min), var(--comparison-card-max)));
+    max-width: calc((4 * var(--comparison-card-max)) + (3 * var(--gap)));
+  }
+}
